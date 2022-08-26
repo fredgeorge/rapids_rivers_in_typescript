@@ -20,6 +20,10 @@ class Packet {
     dateTime(key: string) {
         return Date.parse(this.map.get(key))
     }
+
+    isLacking(key: string) {
+        return !this.map.has(key) || this.map.get(key) == null || this.map.get(key) == '' || this.map.get(key) == []
+    }
 }
 
 exports.Packet = Packet

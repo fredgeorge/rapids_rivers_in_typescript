@@ -37,3 +37,10 @@ test('fetch nuggets', () => {
     expect(packet.get('string_list_key')).toEqual(['foo', 'bar'])
     expect(packet.get('integer_list_key')).toEqual([2, 4])
 })
+
+test('missing keys', () => {
+    expect(packet.isLacking('foo')).toBeTruthy()
+    expect(packet.isLacking('empty_string')).toBeTruthy()
+    expect(packet.isLacking('null_key')).toBeTruthy()
+    expect(packet.isLacking('empty_list_key')).toBeTruthy()
+})
