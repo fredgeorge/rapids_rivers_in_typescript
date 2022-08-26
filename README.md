@@ -1,5 +1,8 @@
 
-Start with installing ts-jest - https://www.npmjs.com/package/ts-jest
+Start with installing ts-jest - https://kulshekhar.github.io/ts-jest/docs/getting-started/installation
+
+- Also add the script tag to package.json so 'npm test' will work
+  - "scripts": { "test": "jest" }
 
 Build directory structure:
 

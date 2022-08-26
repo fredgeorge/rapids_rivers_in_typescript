@@ -5,7 +5,17 @@
  */
 
 class Packet {
+    originalJsonString: string;
+    map: Map<string, any>
 
+    constructor(jsonString: string = '{}') {
+        this.originalJsonString = jsonString;
+        this.map = new Map(Object.entries(JSON.parse(jsonString)))
+    }
+
+    get(key: string) {
+        return this.map.get(key);
+    }
 }
 
 exports.Packet = Packet
