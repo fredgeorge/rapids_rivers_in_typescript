@@ -16,6 +16,10 @@ class Packet {
     get(key: string) {
         return this.map.get(key);
     }
+
+    dateTime(key: string) {
+        return Date.parse(this.map.get(key))
+    }
 }
 
 exports.Packet = Packet

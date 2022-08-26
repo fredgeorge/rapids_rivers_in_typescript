@@ -33,5 +33,7 @@ test('fetch nuggets', () => {
     expect(packet.get('double_key')).toBe(7.5)
     expect(packet.get('boolean_key')).toBe(true)
     expect(packet.get('boolean_string_key')).toBe("false")
-    // expect(packet.dateTime('date_time_key')).toBe(new Date(2022, 3, 3))
+    expect(packet.dateTime('date_time_key')).toBe(Date.UTC(2022, 2, 3))
+    expect(packet.get('string_list_key')).toEqual(['foo', 'bar'])
+    expect(packet.get('integer_list_key')).toEqual([2, 4])
 })
