@@ -6,23 +6,27 @@
 
 class Packet {
     originalJsonString: string;
-    map: Map<string, any>
 
     constructor(jsonString: string = '{}') {
         this.originalJsonString = jsonString;
-        this.map = new Map(Object.entries(JSON.parse(jsonString)))
-    }
-
-    get(key: string) {
-        return this.map.get(key);
+        Object.assign(this, JSON.parse(jsonString, function (key, value) {
+            if (value == null) return undefined
+            if (value == '') return undefined
+            if (value == []) return undefined
+            return value
+        }));
     }
 
     dateTime(key: string) {
-        return Date.parse(this.map.get(key))
+        type ObjectKey = keyof typeof this;
+        const dateKey = key as ObjectKey;
+        // return Date.parse(this[dateKey]) if typeof this[dateKey] == string else this[datekey]
+        return Date.parse(this[dateKey] as unknown as string)
     }
 
-    isLacking(key: string) {
-        return !this.map.has(key) || this.map.get(key) == null || this.map.get(key) == '' || this.map.get(key) == []
+    toJsonString(): string {
+        const { originalJsonString, ...packetFields } = this;
+        return JSON.stringify(packetFields)
     }
 }
 

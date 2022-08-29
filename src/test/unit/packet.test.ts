@@ -21,26 +21,39 @@ let packet = new p.Packet(`
     "empty_list_key":[],
     "detail_key":{
         "detail_string_key":"upgrade",
-        "detail_double_key":10.75
+        "detail_double_key":10.75,
+        "detail_empty_string_key":""
     }
 }
 `)
 
 test('fetch nuggets', () => {
-    expect(packet.get('string_key')).toBe('rental_offer_engine')
-    expect(packet.get('integer_key')).toBe(7)
-    expect(packet.get('integer_key')).toBe(7.0)
-    expect(packet.get('double_key')).toBe(7.5)
-    expect(packet.get('boolean_key')).toBe(true)
-    expect(packet.get('boolean_string_key')).toBe("false")
+    expect(packet.string_key).toBe('rental_offer_engine')
+    expect(packet.integer_key).toBe(7)
+    expect(packet.integer_key).toBe(7.0)
+    expect(packet.double_key).toBe(7.5)
+    expect(packet.boolean_key).toBe(true)
+    expect(packet.boolean_string_key).toBe("false")
     expect(packet.dateTime('date_time_key')).toBe(Date.UTC(2022, 2, 3))
-    expect(packet.get('string_list_key')).toEqual(['foo', 'bar'])
-    expect(packet.get('integer_list_key')).toEqual([2, 4])
+    expect(packet.string_list_key).toEqual(['foo', 'bar'])
+    expect(packet.integer_list_key).toEqual([2, 4])
 })
 
 test('missing keys', () => {
-    expect(packet.isLacking('foo')).toBeTruthy()
-    expect(packet.isLacking('empty_string')).toBeTruthy()
-    expect(packet.isLacking('null_key')).toBeTruthy()
-    expect(packet.isLacking('empty_list_key')).toBeTruthy()
+    expect(packet.foo).toBeUndefined()
+    expect(packet.null_key).toBeUndefined()
+    expect(packet.empty_string).toBeUndefined()
+    expect(packet.empty_list_key).toBeUndefined()
+    expect(packet.detail_empty_string_key).toBeUndefined()
+})
+
+test('invalid JSON', () => {
+    expect(() => new p.Packet('{')).toThrow(SyntaxError)
+    expect(() => new p.Packet('')).toThrow(SyntaxError)
+})
+
+test('detail extraction', () => {
+    expect(packet.detail_key.detail_string_key).toBe('upgrade')
+    expect(packet.detail_key.detail_double_key).toBe(10.75)
+    expect(packet.detail_key.detail_empty_string_key).toBeUndefined()
 })

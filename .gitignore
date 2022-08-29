@@ -38,3 +38,4 @@ node_modules
 
 # WebStorm files
 .idea/
+.idea/workspace.xml
