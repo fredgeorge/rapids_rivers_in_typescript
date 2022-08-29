@@ -4,6 +4,9 @@
  * Licensed under the MIT License; see LICENSE file in root.
  */
 
+import Rules from "../validation/rules";
+import Status from "../validation/status";
+
 class Packet {
     originalJsonString: string;
     [key: string]: any
@@ -27,6 +30,12 @@ class Packet {
     toJsonString(): string {
         const { originalJsonString, ...packetFields } = this;
         return JSON.stringify(packetFields)
+    }
+
+    evaluate(rules: Rules): Status {
+        let status = new Status(this.originalJsonString)
+        rules.assess(this, status)
+        return status
     }
 }
 

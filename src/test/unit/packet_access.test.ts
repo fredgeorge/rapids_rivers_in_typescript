@@ -26,7 +26,7 @@ let packet = new Packet(`
     }
 }
 `)
-// @ts-ignore
+
 test('fetch nuggets', () => {
     expect(packet.string_key).toBe('rental_offer_engine')
     expect(packet.integer_key).toBe(7)
