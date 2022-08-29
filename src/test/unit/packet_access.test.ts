@@ -4,9 +4,9 @@
  * Licensed under the MIT License; see LICENSE file in root.
  */
 
-const p = require('../../main/packets/packet')
+import Packet from "../../main/packets/packet";
 
-let packet = new p.Packet(`
+let packet = new Packet(`
 {
     "string_key":"rental_offer_engine",
     "integer_key":7,
@@ -26,7 +26,7 @@ let packet = new p.Packet(`
     }
 }
 `)
-
+// @ts-ignore
 test('fetch nuggets', () => {
     expect(packet.string_key).toBe('rental_offer_engine')
     expect(packet.integer_key).toBe(7)
@@ -48,8 +48,8 @@ test('missing keys', () => {
 })
 
 test('invalid JSON', () => {
-    expect(() => new p.Packet('{')).toThrow(SyntaxError)
-    expect(() => new p.Packet('')).toThrow(SyntaxError)
+    expect(() => new Packet('{')).toThrow(SyntaxError)
+    expect(() => new Packet('')).toThrow(SyntaxError)
 })
 
 test('detail extraction', () => {

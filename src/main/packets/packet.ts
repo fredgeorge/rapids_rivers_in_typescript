@@ -6,6 +6,7 @@
 
 class Packet {
     originalJsonString: string;
+    [key: string]: any
 
     constructor(jsonString: string = '{}') {
         this.originalJsonString = jsonString;
@@ -20,7 +21,6 @@ class Packet {
     dateTime(key: string) {
         type ObjectKey = keyof typeof this;
         const dateKey = key as ObjectKey;
-        // return Date.parse(this[dateKey]) if typeof this[dateKey] == string else this[datekey]
         return Date.parse(this[dateKey] as unknown as string)
     }
 
@@ -30,4 +30,4 @@ class Packet {
     }
 }
 
-exports.Packet = Packet
+export default Packet
