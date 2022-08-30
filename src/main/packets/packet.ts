@@ -37,6 +37,10 @@ class Packet {
         rules.assess(this, status)
         return status
     }
+
+    has(key): boolean {
+        return this[key] !== undefined
+    }
 }
 
 export default Packet

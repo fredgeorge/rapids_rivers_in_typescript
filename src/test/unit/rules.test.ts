@@ -32,7 +32,18 @@ test('no rules', () => {
     assertPasses(new Rules())
 })
 
+test('required keys', () => {
+    assertPasses(new Rules().requireKeys('string_key', 'integer_key'))
+    assertFails(new Rules().requireKeys('string_key', 'foo'))
+    assertPasses(new Rules().requireKeys('detail_key'))
+})
+
 function assertPasses(rules: Rules) {
     let status = packet.evaluate(rules)
     expect(status.hasErrors()).toBeFalsy()
+}
+
+function assertFails(rules: Rules) {
+    let status = packet.evaluate(rules)
+    expect(status.hasErrors()).toBeTruthy()
 }
