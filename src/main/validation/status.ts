@@ -19,27 +19,27 @@ class Status {
     }
 
     foundExpected(key: string) {
-        this.informationalMessages.push('Required key of <${key}> was found')
+        this.informationalMessages.push(`Required key of <${key}> was found`)
     }
 
     unexpectedlyMissing(key: string) {
-        this.errorMessages.push('Required key of <${key}> is missing')
+        this.errorMessages.push(`Required key of <${key}> is missing`)
     }
 
     missingExpected(key: string) {
-        this.informationalMessages.push('Forbidden key of <${key}> was not found')
+        this.informationalMessages.push(`Forbidden key of <${key}> was not found`)
     }
 
     unexpectedlyFound(key: string) {
-        this.errorMessages.push('Fobidden key of <${key}> unexpectedly exists')
+        this.errorMessages.push(`Fobidden key of <${key}> unexpectedly exists`)
     }
 
     foundValue(key: string, requiredValue: any) {
-        this.informationalMessages.push('Required key of <${key}> have value <${requiredValue}>')
+        this.informationalMessages.push(`Required key of <${key}> have value <${requiredValue}>`)
     }
 
     missingValue(key: string, requiredValue: any) {
-        this.errorMessages.push('Required key of <${key}> is missing required value of <${requiredValue}>')
+        this.errorMessages.push(`Required key of <${key}> is missing required value of <${requiredValue}>`)
     }
 }
 
