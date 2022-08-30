@@ -4,7 +4,7 @@
  * Licensed under the MIT License; see LICENSE file in root.
  */
 
-import Packet from "../../main/packets/packet";
+import {Packet} from "../../main/packets/packet";
 import Rules from "../../main/validation/rules";
 
 let packet = new Packet(`
@@ -39,9 +39,9 @@ test('required keys', () => {
 })
 
 test('forbidden keys', () => {
-    assertPasses(new Rules().forbidkeys('foo'))
-    assertFails(new Rules().forbidkeys('string_key', 'foo'))
-    assertPasses(new Rules().forbidkeys('null_key', 'empty_string', 'empty_list_key'))
+    assertPasses(new Rules().forbidKeys('foo'))
+    assertFails(new Rules().forbidKeys('string_key', 'foo'))
+    assertPasses(new Rules().forbidKeys('null_key', 'empty_string', 'empty_list_key'))
 })
 
 test('require key-value pairs', () => {
@@ -66,7 +66,7 @@ test('compound rules', () => {
     assertPasses(new Rules()
         .requireKeys('string_key', 'integer_key')
         .requireValue('boolean_key', true)
-        .forbidkeys('null_key', 'empty_string', 'empty_list_key')
+        .forbidKeys('null_key', 'empty_string', 'empty_list_key')
         .requireKeys('detail_key')
     )
 

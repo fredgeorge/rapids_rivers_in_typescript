@@ -4,7 +4,7 @@
  * Licensed under the MIT License; see LICENSE file in root.
  */
 
-import Packet from "../../main/packets/packet";
+import {Packet} from "../../main/packets/packet";
 
 let packet = new Packet(`
 {

@@ -4,7 +4,7 @@
  * Licensed under the MIT License; see LICENSE file in root.
  */
 
-import Packet from "../../main/packets/packet";
+import {Packet} from "../../main/packets/packet";
 
 
 test('render unchanged without missing keys', () => {

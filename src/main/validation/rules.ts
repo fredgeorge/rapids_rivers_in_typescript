@@ -4,7 +4,7 @@
  * Licensed under the MIT License; see LICENSE file in root.
  */
 
-import Packet from "../packets/packet";
+import {Packet} from "../packets/packet";
 import Status from "./status";
 
 
@@ -24,7 +24,7 @@ class Rules {
         return this;        // Support chaining during construction
     }
 
-    forbidkeys(...keys: string[]) : Rules {
+    forbidKeys(...keys: string[]) : Rules {
         this.forbiddenKeys.push(...keys);
         return this;        // Support chaining during construction
     }

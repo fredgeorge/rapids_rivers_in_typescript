@@ -6,8 +6,9 @@
 
 import Rules from "../validation/rules";
 import Status from "../validation/status";
+import {RapidsPacket} from "../rapids/rapids_connection";
 
-class Packet {
+export class Packet implements RapidsPacket {
     originalJsonString: string;
     [key: string]: any
 
@@ -42,5 +43,3 @@ class Packet {
         return this[key] !== undefined
     }
 }
-
-export default Packet
