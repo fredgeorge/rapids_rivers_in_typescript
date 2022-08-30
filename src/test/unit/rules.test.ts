@@ -45,9 +45,9 @@ test('forbidden keys', () => {
 })
 
 test('require key-value pairs', () => {
-    assertPasses(new Rules().requireValue('string_key','rental_offer_engine'))
-    assertFails(new Rules().requireValue('string_key','foo'))
-    assertFails(new Rules().requireValue('bar','foo'))
+    assertPasses(new Rules().requireValue('string_key', 'rental_offer_engine'))
+    assertFails(new Rules().requireValue('string_key', 'foo'))
+    assertFails(new Rules().requireValue('bar', 'foo'))
     assertPasses(new Rules().requireValue('integer_key', 7))
     assertPasses(new Rules().requireValue('integer_key', 7.0))
     assertFails(new Rules().requireValue('integer_key', 8))
@@ -60,6 +60,16 @@ test('require key-value pairs', () => {
     assertPasses(new Rules().requireValue('boolean_string_key', 'false'))
     assertFails(new Rules().requireValue('boolean_string_key', 'true'))
     assertFails(new Rules().requireValue('boolean_string_key', 'foo'))
+})
+
+test('compound rules', () => {
+    assertPasses(new Rules()
+        .requireKeys('string_key', 'integer_key')
+        .requireValue('boolean_key', true)
+        .forbidkeys('null_key', 'empty_string', 'empty_list_key')
+        .requireKeys('detail_key')
+    )
+
 })
 
 function assertPasses(rules: Rules) {
