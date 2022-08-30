@@ -38,6 +38,30 @@ test('required keys', () => {
     assertPasses(new Rules().requireKeys('detail_key'))
 })
 
+test('forbidden keys', () => {
+    assertPasses(new Rules().forbidkeys('foo'))
+    assertFails(new Rules().forbidkeys('string_key', 'foo'))
+    assertPasses(new Rules().forbidkeys('null_key', 'empty_string', 'empty_list_key'))
+})
+
+test('require key-value pairs', () => {
+    assertPasses(new Rules().requireValue('string_key','rental_offer_engine'))
+    assertFails(new Rules().requireValue('string_key','foo'))
+    assertFails(new Rules().requireValue('bar','foo'))
+    assertPasses(new Rules().requireValue('integer_key', 7))
+    assertPasses(new Rules().requireValue('integer_key', 7.0))
+    assertFails(new Rules().requireValue('integer_key', 8))
+    assertFails(new Rules().requireValue('integer_key', 'foo'))
+    assertPasses(new Rules().requireValue('double_key', 7.5))
+    assertFails(new Rules().requireValue('double_key', 8))
+    assertPasses(new Rules().requireValue('boolean_key', true))
+    assertFails(new Rules().requireValue('boolean_key', false))
+    assertFails(new Rules().requireValue('boolean_string_key', false))
+    assertPasses(new Rules().requireValue('boolean_string_key', 'false'))
+    assertFails(new Rules().requireValue('boolean_string_key', 'true'))
+    assertFails(new Rules().requireValue('boolean_string_key', 'foo'))
+})
+
 function assertPasses(rules: Rules) {
     let status = packet.evaluate(rules)
     expect(status.hasErrors()).toBeFalsy()
