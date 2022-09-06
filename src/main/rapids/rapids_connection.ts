@@ -4,7 +4,7 @@
  * Licensed under the MIT License; see LICENSE file in root.
  */
 
-import Rules from "../validation/rules";
+import {Rules} from "../validation/rules";
 import {Packet} from "../packets/packet";
 import Status from "../validation/status";
 

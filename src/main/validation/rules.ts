@@ -5,10 +5,10 @@
  */
 
 import {Packet} from "../packets/packet";
-import Status from "./status";
+import {Status} from "./status";
 
 
-class Rules {
+export class Rules {
     requiredKeys : string[] = []
     forbiddenKeys : string[] = []
     requiredValues: {key: string, value: any}[] = []
@@ -57,5 +57,3 @@ class Rules {
     }
 
 }
-
-export default Rules

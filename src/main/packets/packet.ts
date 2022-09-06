@@ -4,8 +4,8 @@
  * Licensed under the MIT License; see LICENSE file in root.
  */
 
-import Rules from "../validation/rules";
-import Status from "../validation/status";
+import {Rules} from "../validation/rules";
+import {Status} from "../validation/status";
 import {RapidsPacket} from "../rapids/rapids_connection";
 
 export class Packet implements RapidsPacket {

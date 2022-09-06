@@ -4,7 +4,7 @@
  * Licensed under the MIT License; see LICENSE file in root.
  */
 
-class Status {
+export class Status {
     jsonString: string
     informationalMessages = []
     errorMessages = []
@@ -42,5 +42,3 @@ class Status {
         this.errorMessages.push(`Required key of <${key}> is missing required value of <${requiredValue}>`)
     }
 }
-
-export default Status

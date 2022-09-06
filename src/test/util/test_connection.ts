@@ -7,7 +7,7 @@
 import {RapidsConnection, RapidsPacket, Service} from "../../main/rapids/rapids_connection";
 import {River} from "../../main/rivers/river";
 
-class TestConnection implements RapidsConnection {
+export class TestConnection implements RapidsConnection {
     maxReadCount: number
     rivers: River[] = []
     messages: string[] = []

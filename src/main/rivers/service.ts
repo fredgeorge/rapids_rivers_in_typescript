@@ -4,11 +4,12 @@
  * Licensed under the MIT License; see LICENSE file in root.
  */
 
-import Rules from "../validation/rules";
-import Packet from "../packets/packet";
-import Status from "../validation/status";
+import {Rules} from "../validation/rules";
+import {Packet} from "../packets/packet";
+import {Status} from "../validation/status";
+import {RapidsConnection} from "../rapids/rapids_connection";
 
-interface Service {
+export interface Service {
     name: string
     rules: Rules
 

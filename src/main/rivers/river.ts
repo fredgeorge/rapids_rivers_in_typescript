@@ -4,7 +4,7 @@
  * Licensed under the MIT License; see LICENSE file in root.
  */
 
-import Rules from "../validation/rules";
+import {Rules} from "../validation/rules";
 import {RapidsConnection, MessageListener, Service} from "../rapids/rapids_connection";
 
 export class River implements MessageListener {

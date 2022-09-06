@@ -5,7 +5,7 @@
  */
 
 import {Packet} from "../../main/packets/packet";
-import Rules from "../../main/validation/rules";
+import {Rules} from "../../main/validation/rules";
 
 let packet = new Packet(`
 {
