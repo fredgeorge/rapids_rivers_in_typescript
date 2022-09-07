@@ -11,6 +11,10 @@ import {Status} from "../../main/validation/status";
 export class SampleService implements Service {
     name: "SampleService";
     rules;
+    acceptedPackets: Packet[]= [];
+    rejectedPackets: Packet[]= [];
+    informationStatuses: Status[]= [];
+    problemStatuses: Status[]= [];
 
     constructor(rules) {
         this.rules = rules;
@@ -21,8 +25,19 @@ export class SampleService implements Service {
     }
 
     packet(connection: RapidsConnection, packet: Packet, information: Status): void {
+        this.acceptedPackets.push(packet);
+        this.informationStatuses.push(information)
     }
 
     rejectedPacket(connection: RapidsConnection, packet: Packet, information: Status): void {
+        this.rejectedPackets.push(packet);
+        this.problemStatuses.push(information)
+    }
+}
+
+export class DeadService extends SampleService {
+
+    isStillAlive(connection: RapidsConnection): boolean {
+        return false;
     }
 }
