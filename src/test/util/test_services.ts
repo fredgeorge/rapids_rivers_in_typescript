@@ -39,7 +39,7 @@ export class SampleService implements SystemService {
         this.problemStatuses.push(information)
     }
 
-    invalidFormat(connection: RapidsConnection, invalidString: string, problems: Status): void {
+    invalidFormat(connection: RapidsConnection, invalidString: string, err: Error): void {
         this.formatProblems.push(invalidString);
     }
 

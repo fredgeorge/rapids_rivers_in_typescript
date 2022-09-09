@@ -5,13 +5,13 @@
  */
 
 import {Rules} from "../validation/rules";
-import {RapidsConnection, MessageListener, Service} from "../rapids/rapids_connection";
+import {RapidsConnection, MessageListener, Service, SystemService} from "../rapids/rapids_connection";
 import {Packet} from "../packets/packet";
 import {Status} from "../validation/status";
 
 export class River implements MessageListener {
     listeners: Service[] = []
-    systemListeners: Service[] = []
+    systemListeners: SystemService[] = []
     rules: Rules
 
     constructor(connection: RapidsConnection, rules: Rules, maxReadCount: number) {
@@ -45,7 +45,7 @@ export class River implements MessageListener {
     }
 
     triggerInvalidFormat(connection: RapidsConnection, message: string, err: Error) {
-
+        this.systemListeners.forEach(s => s.invalidFormat(connection, message, err))
     }
 
 }

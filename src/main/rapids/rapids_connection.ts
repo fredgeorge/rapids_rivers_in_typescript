@@ -31,7 +31,7 @@ export interface Service {
 
 export interface SystemService extends Service {
 
-    invalidFormat?(connection: RapidsConnection, invalidString: string, problems: Status): void
+    invalidFormat?(connection: RapidsConnection, invalidString: string, err: Error): void
 
     loopDetected?(connection: RapidsConnection, packet: Packet)
 }
