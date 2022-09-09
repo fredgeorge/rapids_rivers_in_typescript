@@ -61,6 +61,13 @@ test('invalid JSON', () => {
     expect(normalService.rejectedPackets.length).toBe(0)
     expect(systemService.acceptedPackets.length).toBe(0)
     expect(systemService.rejectedPackets.length).toBe(0)
-    expect(normalService.formatProblems.length).toBe(0)
-    expect(systemService.formatProblems.length).toBe(1)
+    expect(normalService.invalidStrings.length).toBe(0)
+    expect(systemService.invalidStrings.length).toBe(1)
+})
+
+test('start up packet', () => {
+    let connection = new TestConnection();
+    let service = new SampleService(new Rules());
+    connection.register(service);
+    expect(connection.allPackets.length).toBe(1)
 })

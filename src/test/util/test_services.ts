@@ -17,7 +17,7 @@ export class SampleService implements SystemService {
     rejectedPackets: Packet[]= [];
     informationStatuses: Status[]= [];
     problemStatuses: Status[]= [];
-    formatProblems: string[] = [];
+    invalidStrings: string[] = [];
     loopPackets: Packet[] = [];
 
     constructor(rules, isSystemService: boolean = false) {
@@ -40,7 +40,7 @@ export class SampleService implements SystemService {
     }
 
     invalidFormat(connection: RapidsConnection, invalidString: string, err: Error): void {
-        this.formatProblems.push(invalidString);
+        this.invalidStrings.push(invalidString);
     }
 
     loopDetected(connection: RapidsConnection, packet: Packet) {

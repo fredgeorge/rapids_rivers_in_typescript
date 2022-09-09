@@ -7,6 +7,7 @@
 import {Rules} from "../validation/rules";
 import {Status} from "../validation/status";
 import {RapidsPacket} from "../rapids/rapids_connection";
+import {SYSTEM_COMMUNITY_VALUE} from "./constants";
 
 export class Packet implements RapidsPacket {
     originalJsonString: string;
@@ -41,5 +42,9 @@ export class Packet implements RapidsPacket {
 
     has(key): boolean {
         return this[key] !== undefined
+    }
+
+    isSystem(): boolean {
+        return this.community == SYSTEM_COMMUNITY_VALUE;
     }
 }

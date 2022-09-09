@@ -8,21 +8,26 @@ import {Rules} from "../validation/rules";
 import {RapidsConnection, MessageListener, Service, SystemService} from "../rapids/rapids_connection";
 import {Packet} from "../packets/packet";
 import {Status} from "../validation/status";
+import {StartUpPacket} from "../packets/start_up_packet";
 
 export class River implements MessageListener {
-    listeners: Service[] = []
-    systemListeners: SystemService[] = []
-    rules: Rules
+    private readonly connection: RapidsConnection;
+    private readonly rules: Rules
+    private readonly maxReadCount: number;
+    private readonly listeners: Service[] = []
+    private readonly systemListeners: SystemService[] = []
 
     constructor(connection: RapidsConnection, rules: Rules, maxReadCount: number) {
+        this.connection = connection;
         this.rules = rules;
+        this.maxReadCount = maxReadCount;
     }
 
     message(connection: RapidsConnection, message: string): void {
         try {
             let packet = new Packet(message);
             let status = packet.evaluate(this.rules);
-            let listeners = this.listeners
+            let listeners = packet.isSystem() ? this.systemListeners : this.listeners;
             if (status.hasErrors()) this.triggerRejectedPacket(listeners, connection, packet, status)
             else this.triggerAccceptedPacket(listeners, connection, packet, status)
         }
@@ -34,6 +39,7 @@ export class River implements MessageListener {
     register(service: Service) {
         this.listeners.push(service)
         if (service.isSystemService) this.systemListeners.push(service)
+        this.connection.publish(new StartUpPacket(service))
     }
 
     triggerAccceptedPacket(services: Service[], connection: RapidsConnection, packet: Packet, information: Status) {
