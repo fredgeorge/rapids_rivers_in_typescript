@@ -50,6 +50,11 @@ export class SampleService implements SystemService {
 
 export class DeadService extends SampleService {
 
+    constructor() {
+        super(new Rules());
+    }
+
+
     isStillAlive(connection: RapidsConnection): boolean {
         return false;
     }

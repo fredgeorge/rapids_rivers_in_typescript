@@ -6,8 +6,9 @@
 
 import {Rules} from "../validation/rules";
 import {Status} from "../validation/status";
-import {RapidsPacket} from "../rapids/rapids_connection";
+import {RapidsPacket, Service} from "../rapids/rapids_connection";
 import {SYSTEM_COMMUNITY_VALUE} from "./constants";
+import {HeartBeat} from "./heart_beat_packet";
 
 export class Packet implements RapidsPacket {
     originalJsonString: string;
@@ -46,5 +47,16 @@ export class Packet implements RapidsPacket {
 
     isSystem(): boolean {
         return this.community == SYSTEM_COMMUNITY_VALUE;
+    }
+
+    isHeartBeat(): boolean {
+        let status = this.evaluate(HeartBeat.rules())
+        return !status.hasErrors()
+    }
+
+    toHeartBeatResponse(service: Service) : Packet {
+        let result = new Packet(this.originalJsonString);
+        result.heart_beat_responder = service.name;
+        return result;
     }
 }

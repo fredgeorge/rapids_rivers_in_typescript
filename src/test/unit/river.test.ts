@@ -7,7 +7,8 @@
 import {Packet} from "../../main/packets/packet";
 import {TestConnection} from "../util/test_connection";
 import {Rules} from "../../main/validation/rules";
-import {SampleService} from "../util/test_services";
+import {DeadService, SampleService} from "../util/test_services";
+import {HeartBeat} from "../../main/packets/heart_beat_packet";
 
 let packet = new Packet(`
 {
@@ -70,4 +71,22 @@ test('start up packet', () => {
     let service = new SampleService(new Rules());
     connection.register(service);
     expect(connection.allPackets.length).toBe(1)
+})
+
+test('heart beats', () => {
+    let connection = new TestConnection();
+    let normalService = new SampleService(new Rules(), false);
+    let deadService = new DeadService();
+    let systemService = new SampleService(new Rules(), true);
+    connection.register(normalService)
+    connection.register(deadService)
+    connection.register(systemService)
+    let heartBeat = new HeartBeat();
+    connection.publish(heartBeat);
+    expect(normalService.acceptedPackets.length).toBe(0)
+    expect(systemService.acceptedPackets.length).toBe(3) // Original heart beat and only 2 responses
+    connection.publish(heartBeat);
+    connection.publish(heartBeat);
+    expect(normalService.acceptedPackets.length).toBe(0)
+    expect(systemService.acceptedPackets.length).toBe(9) // 3 HeartBeat's with 2 responses each
 })

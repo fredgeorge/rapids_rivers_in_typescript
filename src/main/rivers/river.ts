@@ -26,12 +26,12 @@ export class River implements MessageListener {
     message(connection: RapidsConnection, message: string): void {
         try {
             let packet = new Packet(message);
+            if (packet.isHeartBeat()) this.triggerHeartBeatResponse(connection, packet)
             let status = packet.evaluate(this.rules);
             let listeners = packet.isSystem() ? this.systemListeners : this.listeners;
             if (status.hasErrors()) this.triggerRejectedPacket(listeners, connection, packet, status)
-            else this.triggerAccceptedPacket(listeners, connection, packet, status)
-        }
-        catch(err) {
+            else this.triggerAcceptedPacket(listeners, connection, packet, status)
+        } catch (err) {
             this.triggerInvalidFormat(connection, message, err)
         }
     }
@@ -42,16 +42,23 @@ export class River implements MessageListener {
         this.connection.publish(new StartUpPacket(service))
     }
 
-    triggerAccceptedPacket(services: Service[], connection: RapidsConnection, packet: Packet, information: Status) {
+    private triggerAcceptedPacket(services: Service[], connection: RapidsConnection, packet: Packet, information: Status) {
         services.forEach(s => s.packet(connection, packet, information))
     }
 
-    triggerRejectedPacket(services: Service[], connection: RapidsConnection, packet: Packet, problems: Status) {
+    private triggerRejectedPacket(services: Service[], connection: RapidsConnection, packet: Packet, problems: Status) {
         services.forEach(s => s.rejectedPacket(connection, packet, problems))
     }
 
-    triggerInvalidFormat(connection: RapidsConnection, message: string, err: Error) {
+    private triggerInvalidFormat(connection: RapidsConnection, message: string, err: Error) {
         this.systemListeners.forEach(s => s.invalidFormat(connection, message, err))
     }
 
+    private triggerHeartBeatResponse(connection: RapidsConnection, packet: Packet) {
+        this.listeners.forEach(s => {
+                if (s.isStillAlive == undefined || s.isStillAlive(connection) == true)
+                    connection.publish(packet.toHeartBeatResponse(s));
+            }
+        )
+    }
 }
