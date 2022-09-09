@@ -6,7 +6,7 @@
 
 import {Rules} from "../validation/rules";
 import {Packet} from "../packets/packet";
-import Status from "../validation/status";
+import {Status} from "../validation/status";
 
 export interface RapidsConnection {
     register(listener: Service): void
@@ -20,19 +20,20 @@ export interface MessageListener {
 export interface Service {
     name: string
     rules: Rules
+    isSystemService?: boolean
 
-    isStillAlive(connection: RapidsConnection): boolean  // isStillAlive
+    isStillAlive?(connection: RapidsConnection): boolean  // isStillAlive
 
     packet(connection: RapidsConnection, packet: Packet, information: Status): void
 
-    rejectedPacket(connection: RapidsConnection, packet: Packet, information: Status): void
+    rejectedPacket?(connection: RapidsConnection, packet: Packet, information: Status): void
 }
 
 export interface SystemService extends Service {
 
-    invalidFormat(connection: RapidsConnection, invalidString: string, problems: Status): void
+    invalidFormat?(connection: RapidsConnection, invalidString: string, problems: Status): void
 
-    loopDetected(connection: RapidsConnection, packet: Packet)
+    loopDetected?(connection: RapidsConnection, packet: Packet)
 }
 
 export interface RapidsPacket {

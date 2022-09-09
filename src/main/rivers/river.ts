@@ -19,14 +19,21 @@ export class River implements MessageListener {
     }
 
     message(connection: RapidsConnection, message: string): void {
-        let packet = new Packet(message);
-        let status = packet.evaluate(this.rules);
-        if (status.hasErrors()) this.triggerRejectedPacket(this.listeners, connection, packet, status)
-        else this.triggerAccceptedPacket(this.listeners, connection, packet, status)
+        try {
+            let packet = new Packet(message);
+            let status = packet.evaluate(this.rules);
+            let listeners = this.listeners
+            if (status.hasErrors()) this.triggerRejectedPacket(listeners, connection, packet, status)
+            else this.triggerAccceptedPacket(listeners, connection, packet, status)
+        }
+        catch(err) {
+            this.triggerInvalidFormat(connection, message, err)
+        }
     }
 
     register(service: Service) {
         this.listeners.push(service)
+        if (service.isSystemService) this.systemListeners.push(service)
     }
 
     triggerAccceptedPacket(services: Service[], connection: RapidsConnection, packet: Packet, information: Status) {
@@ -35,6 +42,10 @@ export class River implements MessageListener {
 
     triggerRejectedPacket(services: Service[], connection: RapidsConnection, packet: Packet, problems: Status) {
         services.forEach(s => s.rejectedPacket(connection, packet, problems))
+    }
+
+    triggerInvalidFormat(connection: RapidsConnection, message: string, err: Error) {
+
     }
 
 }

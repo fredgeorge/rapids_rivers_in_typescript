@@ -36,3 +36,25 @@ test('unfiltered service', () => {
     expect(service.rejectedPackets.length).toBe(0)
     expect(service.problemStatuses.length).toBe(0)
 })
+
+test('filtered service', () => {
+    let connection = new TestConnection()
+    let acceptedService = new SampleService(new Rules().requireKeys('integer_key'))
+    let rejectedService = new SampleService(new Rules().forbidKeys('integer_key'))
+    connection.register(acceptedService)
+    connection.register(rejectedService)
+    connection.publish(packet)
+    expect(acceptedService.acceptedPackets.length).toBe(1)
+    expect(acceptedService.informationStatuses[0].hasErrors()).toBeFalsy()
+    expect(rejectedService.rejectedPackets.length).toBe(1)
+    expect(rejectedService.problemStatuses[0].hasErrors()).toBeTruthy()
+})
+
+test('invalid JSON', () => {
+    let connection = new TestConnection();
+    let normalService = new SampleService(new Rules(), false);
+    let systemService = new SampleService(new Rules(), true);
+    connection.register(normalService)
+    connection.register(systemService)
+    connection.publishString('{')
+})

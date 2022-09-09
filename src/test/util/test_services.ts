@@ -4,20 +4,25 @@
  * Licensed under the MIT License; see LICENSE file in root.
  */
 
-import {RapidsConnection, Service} from "../../main/rapids/rapids_connection";
+import {RapidsConnection, SystemService} from "../../main/rapids/rapids_connection";
 import {Packet} from "../../main/packets/packet";
 import {Status} from "../../main/validation/status";
+import {Rules} from "../../main/validation/rules";
 
-export class SampleService implements Service {
-    name: "SampleService";
-    rules;
+export class SampleService implements SystemService {
+    name: string = "SampleService";
+    rules: Rules;
+    isSystemService: boolean;
     acceptedPackets: Packet[]= [];
     rejectedPackets: Packet[]= [];
     informationStatuses: Status[]= [];
     problemStatuses: Status[]= [];
+    formatProblems: string[] = [];
+    loopPackets: Packet[] = [];
 
-    constructor(rules) {
+    constructor(rules, isSystemService: boolean = false) {
         this.rules = rules;
+        this.isSystemService = isSystemService;
     }
 
     isStillAlive(connection: RapidsConnection): boolean {
@@ -32,6 +37,14 @@ export class SampleService implements Service {
     rejectedPacket(connection: RapidsConnection, packet: Packet, information: Status): void {
         this.rejectedPackets.push(packet);
         this.problemStatuses.push(information)
+    }
+
+    invalidFormat(connection: RapidsConnection, invalidString: string, problems: Status): void {
+        this.formatProblems.push(invalidString);
+    }
+
+    loopDetected(connection: RapidsConnection, packet: Packet) {
+        this.loopPackets.push(packet);
     }
 }
 
