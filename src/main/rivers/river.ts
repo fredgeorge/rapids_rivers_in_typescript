@@ -9,6 +9,7 @@ import {RapidsConnection, MessageListener, Service, SystemService} from "../rapi
 import {Packet} from "../packets/packet";
 import {Status} from "../validation/status";
 import {StartUpPacket} from "../packets/start_up_packet";
+import {SYSTEM_BREADCRUMBS_KEY} from "../packets/constants";
 
 export class River implements MessageListener {
     private readonly connection: RapidsConnection;
@@ -47,7 +48,11 @@ export class River implements MessageListener {
     }
 
     private triggerAcceptedPacket(services: Service[], connection: RapidsConnection, packet: Packet, information: Status) {
-        services.forEach(s => s.packet(connection, packet, information))
+        let breadcrumbs = packet.has(SYSTEM_BREADCRUMBS_KEY) ? packet[SYSTEM_BREADCRUMBS_KEY] : []
+        services.forEach(s => {
+            packet[SYSTEM_BREADCRUMBS_KEY] = [...breadcrumbs].concat([s.name])
+            s.packet(connection, packet, information)
+        })
     }
 
     private triggerRejectedPacket(services: Service[], connection: RapidsConnection, packet: Packet, problems: Status) {

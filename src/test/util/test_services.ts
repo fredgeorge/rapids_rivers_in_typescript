@@ -54,8 +54,24 @@ export class DeadService extends SampleService {
         super(new Rules());
     }
 
-
     isStillAlive(connection: RapidsConnection): boolean {
         return false;
+    }
+}
+
+export class LinkedService extends SampleService{
+    private forbiddenKeys: string[];
+
+    constructor(requiredKeys: string[], forbiddenKeys: string[]) {
+        super(new Rules().requireKeys(...requiredKeys).forbidKeys(...forbiddenKeys))
+        this.forbiddenKeys = forbiddenKeys;
+    }
+
+    packet(connection: RapidsConnection, packet: Packet, information: Status) {
+        if (this.forbiddenKeys.length != 0) {
+            packet[this.forbiddenKeys[0]] = true;
+            connection.publish(packet);
+        }
+        super.packet(connection, packet, information);
     }
 }
