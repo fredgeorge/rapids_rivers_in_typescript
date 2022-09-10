@@ -7,7 +7,7 @@
 import {Rules} from "../validation/rules";
 import {Status} from "../validation/status";
 import {RapidsPacket, Service} from "../rapids/rapids_connection";
-import {SYSTEM_COMMUNITY_VALUE} from "./constants";
+import {HEART_BEAT_RESPONDER_KEY, SYSTEM_COMMUNITY_VALUE, SYSTEM_READ_COUNT_KEY} from "./constants";
 import {HeartBeat} from "./heart_beat_packet";
 
 export class Packet implements RapidsPacket {
@@ -54,9 +54,19 @@ export class Packet implements RapidsPacket {
         return !status.hasErrors()
     }
 
+    hasInvalidReadCount(maxCount: number) {
+        return maxCount != 0 && this.readCount() > maxCount
+    }
+
+    private readCount() {
+        let result = this.has(SYSTEM_READ_COUNT_KEY) ? this[SYSTEM_READ_COUNT_KEY] + 1 : 1;
+        this[SYSTEM_READ_COUNT_KEY] = result;
+        return result;
+    }
+
     toHeartBeatResponse(service: Service) : Packet {
         let result = new Packet(this.originalJsonString);
-        result.heart_beat_responder = service.name;
+        result[HEART_BEAT_RESPONDER_KEY] = service.name;
         return result;
     }
 }

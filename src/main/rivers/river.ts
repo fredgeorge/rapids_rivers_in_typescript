@@ -26,6 +26,10 @@ export class River implements MessageListener {
     message(connection: RapidsConnection, message: string): void {
         try {
             let packet = new Packet(message);
+            if (packet.hasInvalidReadCount(this.maxReadCount)) {
+                this.triggerLoopDetection(connection, packet);
+                return;
+            }
             if (packet.isHeartBeat()) this.triggerHeartBeatResponse(connection, packet)
             let status = packet.evaluate(this.rules);
             let listeners = packet.isSystem() ? this.systemListeners : this.listeners;
@@ -60,5 +64,9 @@ export class River implements MessageListener {
                     connection.publish(packet.toHeartBeatResponse(s));
             }
         )
+    }
+
+    private triggerLoopDetection(connection: RapidsConnection, packet: Packet) {
+        this.systemListeners.forEach(s => s.loopDetected(connection, packet))
     }
 }

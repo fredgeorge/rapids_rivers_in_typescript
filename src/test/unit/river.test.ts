@@ -9,6 +9,7 @@ import {TestConnection} from "../util/test_connection";
 import {Rules} from "../../main/validation/rules";
 import {DeadService, SampleService} from "../util/test_services";
 import {HeartBeat} from "../../main/packets/heart_beat_packet";
+import {SYSTEM_READ_COUNT_KEY} from "../../main/packets/constants";
 
 let packet = new Packet(`
 {
@@ -89,4 +90,26 @@ test('heart beats', () => {
     connection.publish(heartBeat);
     expect(normalService.acceptedPackets.length).toBe(0)
     expect(systemService.acceptedPackets.length).toBe(9) // 3 HeartBeat's with 2 responses each
+})
+
+test('loop detection', () => {
+    let connection = new TestConnection(2)
+    let normalService = new SampleService(new Rules(), false);
+    let systemService = new SampleService(new Rules(), true);
+    connection.register(normalService);
+    connection.register(systemService);
+    connection.publish(packet);
+    expect(normalService.acceptedPackets.length).toBe(1);
+    expect(systemService.acceptedPackets.length).toBe(1);
+
+    packet[SYSTEM_READ_COUNT_KEY] = 1;
+    connection.publish(packet)
+    expect(normalService.acceptedPackets.length).toBe(2);
+    expect(systemService.acceptedPackets.length).toBe(2);
+
+    packet[SYSTEM_READ_COUNT_KEY] = 2;
+    connection.publish(packet)
+    expect(systemService.loopPackets.length).toBe(1);  // Loop detected
+    expect(normalService.acceptedPackets.length).toBe(2);  // Not forwarded to normal service
+    expect(systemService.acceptedPackets.length).toBe(2);  // Not forwarded to system service
 })
