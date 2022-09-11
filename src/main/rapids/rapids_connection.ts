@@ -9,7 +9,7 @@ import {Packet} from "../packets/packet";
 import {Status} from "../validation/status";
 
 export interface RapidsConnection {
-    register(listener: Service): void
+    register(service: Service): void
     publish(packet: RapidsPacket): void
 }
 
