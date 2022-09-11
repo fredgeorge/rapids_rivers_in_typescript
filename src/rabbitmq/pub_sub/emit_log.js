@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-# Sample harvested from RabbitMQ site: JavaScript implementation of pub/sub
+// Sample harvested from RabbitMQ site: JavaScript implementation of pub/sub
 
 var amqp = require('amqplib/callback_api');
 
