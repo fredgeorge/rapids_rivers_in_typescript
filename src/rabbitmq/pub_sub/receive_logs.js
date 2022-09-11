@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+# Sample harvested from RabbitMQ site: JavaScript implementation of pub/sub
+
 var amqp = require('amqplib/callback_api');
 
 amqp.connect('amqp://localhost', function(error0, connection) {
