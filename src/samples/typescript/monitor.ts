@@ -18,10 +18,15 @@ class Monitor implements SystemService {
     rules: Rules = new Rules();
 
     packet(connection: RapidsConnection, packet: Packet, information: Status): void {
-        console.log(` [*] Received ${packet.toJsonString()}`);
+        console.log(` [*] Received valid packet:\n\t\t${packet.toJsonString()}`);
     }
 
     rejectedPacket(connection: RapidsConnection, packet: Packet, information: Status): void {
+        console.log(` [x] ERROR: The following packet was erroneously rejected:\n\t\t${packet.toJsonString()}`);
+    }
+
+    invalidFormat(connection: RapidsConnection, invalidString: string, err: Error) {
+        console.log(` [*] Received invalid JSON formatted message:\n\t\t${invalidString}`);
     }
 }
 

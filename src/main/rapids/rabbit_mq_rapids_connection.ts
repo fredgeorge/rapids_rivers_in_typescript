@@ -37,7 +37,6 @@ export class RabbitMqConnection implements RapidsConnection {
         const queue: Queue = this.connection.declareQueue(queueName);
         queue.bind(this.exchange);
         queue.activateConsumer((message) => {
-            console.log("Message received: " + message.getContent());
             this.rivers.forEach(r => r.message(this, message.content.toString()))
         });
     }
