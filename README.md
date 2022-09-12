@@ -13,7 +13,7 @@ This framework models the Rapids/Rivers/Pond metaphor first proposed by Fred Geo
 It strives to present a relatively simple choreography scheme to allow tiny MicroServices
 to interact with minimal coupling.
 
-Originally formulated for a workshop conference in Bergen, Norway, and it has been re-implemented
+Originally formulated for a workshop conference in Bergen, Norway, in 2014(?), and it has been re-implemented
 several times, including NAV (Norwegian Welfare Association) in 2019 and Orn Software in 2022 (in C#).
 
 ## Dependencies
@@ -46,7 +46,23 @@ conform to the rules.
 Two TypeScript sample services are provided:
 
 - __Need__ service generates a stream of messages on the event bus
-  - Examine this code for how to send a Packet
+  - Examine this code for how to create and send a Packet
 - __Monitor__ service logs to the console all messages on the bus
   - Examine this code for how to attach to the __rapids__ via a __river__
   - Also note the comments for how to set up __rules__ for the __packets__ you want to process
+
+## Running Sample Services
+
+Bring up an instance of RabbitMQ, preferably with the management addition to
+allow browser inspection of what is happening.
+
+Run the Monitor service. Start the monitor.js (not the monitor.ts),
+and be sure to add the startup parameters identifying the RabbitMQ IP address
+(localhost if running locally) and port number (default is 5672). You should see
+a console log announcing its start.
+
+Next, run the Need service by starting need.js. Again, IP and port are required
+parameters. Need should generate a message very five seconds. Monitor should show
+this message.
+
+If this is all working, you are ready to write your own, new services!
