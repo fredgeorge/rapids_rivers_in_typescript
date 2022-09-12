@@ -9,7 +9,6 @@ export class Status {
     informationalMessages = []
     errorMessages = []
 
-
     constructor(originalJsonString: string) {
         this.jsonString = originalJsonString
     }

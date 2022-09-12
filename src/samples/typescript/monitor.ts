@@ -30,4 +30,5 @@ class Monitor implements SystemService {
     }
 }
 
-new RabbitMqConnection("localhost", 5672).register(new Monitor())
+if (process.argv.length != 4) throw 'Invoke this service with two parameters: host IP as a string, and port (string or number)'
+new RabbitMqConnection(process.argv[2], process.argv[3]).register(new Monitor())

@@ -16,10 +16,10 @@ export class Packet implements RapidsPacket {
 
     constructor(jsonString: string = '{}') {
         this.originalJsonString = jsonString;
-        Object.assign(this, JSON.parse(jsonString, function (key, value) {
-            if (value == null) return undefined
-            if (value == '') return undefined
-            if (value == []) return undefined
+        Object.assign(this, JSON.parse(jsonString, function (key, value) {  // Create Packet properties for each JSON element
+            if (value == null) return undefined     // null counts as "missing"
+            if (value == '') return undefined       // empty string counts as "missing"
+            if (value == []) return undefined       // empty array counts as "missing"
             return value
         }));
     }
