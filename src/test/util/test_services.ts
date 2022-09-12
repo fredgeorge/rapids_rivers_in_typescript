@@ -49,6 +49,7 @@ export class SampleService implements SystemService {
 }
 
 export class DeadService extends SampleService {
+    name: string = `DeadService [${Math.random()}]`
 
     constructor() {
         super(new Rules());
@@ -60,6 +61,7 @@ export class DeadService extends SampleService {
 }
 
 export class LinkedService extends SampleService{
+    name: string = `LinkedService [${Math.random()}]`
     private readonly forbiddenKeys: string[];
 
     constructor(requiredKeys: string[], forbiddenKeys: string[]) {

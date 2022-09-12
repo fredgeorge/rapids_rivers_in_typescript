@@ -5,7 +5,8 @@ Copyright (c) 2022 by Fred George
 Licensed under the MIT License; see LICENSE file in root.
 
 A TypeScript implementation of Rapids/Rivers framework using 
-RabbitMQ for the event bus.
+RabbitMQ for the event bus. This also supports JavaScript 
+implementation of services (using TypeScript engine).
 
 ## Summary
 
@@ -45,24 +46,27 @@ conform to the rules.
 
 Two TypeScript sample services are provided:
 
-- __Need__ service generates a stream of messages on the event bus
+- __Need__ _in TypeScript_: service generates a stream of messages on the event bus
   - Examine this code for how to create and send a Packet
-- __Monitor__ service logs to the console all messages on the bus
+- __Monitor__ _in TypeScript_: service logs to the console all messages on the bus
   - Examine this code for how to attach to the __rapids__ via a __river__
   - Also note the comments for how to set up __rules__ for the __packets__ you want to process
+
+Two corresponding JavaScript sample services are also provided with the same
+purposes as the TypeScript versions.
 
 ## Running Sample Services
 
 Bring up an instance of RabbitMQ, preferably with the management addition to
 allow browser inspection of what is happening.
 
-Run the Monitor service. Start the monitor.js (not the monitor.ts),
+Run the Monitor service. Start the compiler-built monitor.js (not the monitor.ts),
 and be sure to add the startup parameters identifying the RabbitMQ IP address
 (localhost if running locally) and port number (default is 5672). You should see
 a console log announcing its start.
 
-Next, run the Need service by starting need.js. Again, IP and port are required
-parameters. Need should generate a message very five seconds. Monitor should show
-this message.
+Next, run the Need service by starting the compiler-built need.js. Again, IP and port 
+are required parameters. Need should generate a message very five seconds. Monitor 
+should show this message.
 
 If this is all working, you are ready to write your own, new services!
