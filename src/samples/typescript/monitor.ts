@@ -14,7 +14,7 @@ import {RabbitMqConnection} from "../../main/rapids/rabbit_mq_rapids_connection"
 
 class Monitor implements SystemService {
     isSystemService: boolean = true;
-    name: string = "Monitor"
+    name: string = `Monitor [${Math.random()}]`;
     rules: Rules = new Rules()
         // Specify constraints here (Monitor has no constraints deliberately)
         // .requireValue('key1', 'value1')   // This requires that the key-value pair exists
@@ -36,7 +36,7 @@ class Monitor implements SystemService {
 
     // Special optional API only for SystemServices; allows detection of deviant (non-JSON) messages
     invalidFormat(connection: RapidsConnection, invalidString: string, err: Error) {
-        console.log(` [*] Received invalid JSON formatted message:\n\t\t${invalidString}`);
+        console.log(` [x] Received invalid JSON formatted message:\n\t\t${invalidString}`);
     }
 }
 

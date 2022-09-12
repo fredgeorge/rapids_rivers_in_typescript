@@ -23,5 +23,7 @@ const publish = () => {
     connection.publish(packet);
 }
 
+console.log(` [*] Generating messages every 5 seconds. To exit press CTRL+C`);
+
 publish()
 setInterval(function () { publish() }, 5000);
