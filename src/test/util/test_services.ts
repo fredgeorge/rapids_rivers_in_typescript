@@ -10,7 +10,7 @@ import {Status} from "../../main/validation/status";
 import {Rules} from "../../main/validation/rules";
 
 export class SampleService implements SystemService {
-    name: string = "SampleService";
+    name: string = "SampleService" + Math.random();
     rules: Rules;
     isSystemService: boolean;
     acceptedPackets: Packet[]= [];
@@ -60,7 +60,7 @@ export class DeadService extends SampleService {
 }
 
 export class LinkedService extends SampleService{
-    private forbiddenKeys: string[];
+    private readonly forbiddenKeys: string[];
 
     constructor(requiredKeys: string[], forbiddenKeys: string[]) {
         super(new Rules().requireKeys(...requiredKeys).forbidKeys(...forbiddenKeys))
@@ -73,5 +73,37 @@ export class LinkedService extends SampleService{
             connection.publish(packet);
         }
         super.packet(connection, packet, information);
+    }
+}
+
+export class OnlyLoopsService implements SystemService {
+    name: string = `OnlyLoopsService [${Math.random()}]`;
+    rules: Rules = new Rules();
+    isSystemService: boolean = true;
+    readonly validPackets: Packet[] = [];
+    readonly loopPackets: Packet[] = [];
+
+    loopDetected(connection: RapidsConnection, packet: Packet) {
+        this.loopPackets.push(packet);
+    }
+
+    packet(connection: RapidsConnection, packet: Packet, information: Status): void {
+        this.validPackets.push(packet);
+    }
+}
+
+export class OnlyInvalidJsonService implements SystemService {
+    name: string = `OnlyInvalidJsonService [${Math.random()}]`;
+    rules: Rules = new Rules();
+    isSystemService: boolean = true;
+    readonly validPackets: Packet[] = [];
+    readonly invalidStrings: string[] = [];
+
+    packet(connection: RapidsConnection, packet: Packet, information: Status): void {
+        this.validPackets.push(packet);
+    }
+
+    invalidFormat(connection: RapidsConnection, invalidString: string, err: Error) {
+        this.invalidStrings.push(invalidString);
     }
 }

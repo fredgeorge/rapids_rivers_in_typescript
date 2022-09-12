@@ -30,6 +30,7 @@ export interface Service {
 }
 
 export interface SystemService extends Service {
+    isSystemService: boolean
 
     invalidFormat?(connection: RapidsConnection, invalidString: string, err: Error): void
 

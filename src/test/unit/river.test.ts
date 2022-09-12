@@ -7,7 +7,13 @@
 import {Packet} from "../../main/packets/packet";
 import {TestConnection} from "../util/test_connection";
 import {Rules} from "../../main/validation/rules";
-import {DeadService, LinkedService, SampleService} from "../util/test_services";
+import {
+    DeadService,
+    LinkedService,
+    OnlyInvalidJsonService,
+    OnlyLoopsService,
+    SampleService
+} from "../util/test_services";
 import {HeartBeat} from "../../main/packets/heart_beat_packet";
 import {SYSTEM_BREADCRUMBS_KEY, SYSTEM_READ_COUNT_KEY} from "../../main/packets/constants";
 
@@ -55,8 +61,12 @@ test('filtered service', () => {
 test('invalid JSON', () => {
     let connection = new TestConnection();
     let normalService = new SampleService(new Rules(), false);
+    let onlyLoopsService = new OnlyLoopsService();
+    let onlyInvalidJsonService = new OnlyInvalidJsonService();
     let systemService = new SampleService(new Rules(), true);
     connection.register(normalService);
+    connection.register(onlyLoopsService); // Doesn't handle invalid JSON; should collect nothing
+    connection.register(onlyInvalidJsonService);
     connection.register(systemService);
     connection.publishString('{');
     expect(normalService.acceptedPackets.length).toBe(0);
@@ -65,6 +75,7 @@ test('invalid JSON', () => {
     expect(systemService.rejectedPackets.length).toBe(0);
     expect(normalService.invalidStrings.length).toBe(0);
     expect(systemService.invalidStrings.length).toBe(1);
+    expect(onlyInvalidJsonService.invalidStrings.length).toBe(1);
 })
 
 test('start up packet', () => {
@@ -95,21 +106,28 @@ test('heart beats', () => {
 test('loop detection', () => {
     let connection = new TestConnection(2);
     let normalService = new SampleService(new Rules(), false);
+    let onlyLoopsService = new OnlyLoopsService();
+    let onlyInvalidJsonService = new OnlyInvalidJsonService();
     let systemService = new SampleService(new Rules(), true);
     connection.register(normalService);
+    connection.register(onlyLoopsService);
+    connection.register(onlyInvalidJsonService);  // Should ignore loop errors completely
     connection.register(systemService);
     connection.publish(packet);
     expect(normalService.acceptedPackets.length).toBe(1);
+    expect(onlyLoopsService.loopPackets.length).toBe(0);
     expect(systemService.acceptedPackets.length).toBe(1);
 
     packet[SYSTEM_READ_COUNT_KEY] = 1;
     connection.publish(packet);
     expect(normalService.acceptedPackets.length).toBe(2);
     expect(systemService.acceptedPackets.length).toBe(2);
+    expect(onlyLoopsService.loopPackets.length).toBe(0);
 
     packet[SYSTEM_READ_COUNT_KEY] = 2;
     connection.publish(packet);
     expect(systemService.loopPackets.length).toBe(1);  // Loop detected
+    expect(onlyLoopsService.loopPackets.length).toBe(1);
     expect(normalService.acceptedPackets.length).toBe(2);  // Not forwarded to normal service
     expect(systemService.acceptedPackets.length).toBe(2);  // Not forwarded to system service
 })

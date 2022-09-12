@@ -43,7 +43,7 @@ export class River implements MessageListener {
 
     register(service: Service) {
         this.listeners.push(service)
-        if (service.isSystemService) this.systemListeners.push(service)
+        if (service.isSystemService != undefined && service.isSystemService) this.systemListeners.push(service as SystemService)
         this.connection.publish(new StartUpPacket(service))
     }
 
@@ -60,7 +60,9 @@ export class River implements MessageListener {
     }
 
     private triggerInvalidFormat(connection: RapidsConnection, message: string, err: Error) {
-        this.systemListeners.forEach(s => s.invalidFormat(connection, message, err))
+        this.systemListeners.forEach(s => {
+            if (s.invalidFormat != undefined) s.invalidFormat(connection, message, err);
+        });
     }
 
     private triggerHeartBeatResponse(connection: RapidsConnection, packet: Packet) {
