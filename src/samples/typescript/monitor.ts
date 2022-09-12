@@ -30,8 +30,8 @@ class Monitor implements SystemService {
     }
 
     // Optional API for any Service; useful for debugging 'why' a Packet was rejected
-    rejectedPacket(connection: RapidsConnection, packet: Packet, information: Status): void {
-        console.log(` [x] ERROR: The following packet was erroneously rejected:\n\t\t${packet.toJsonString()}`);
+    rejectedPacket(connection: RapidsConnection, packet: Packet, problems: Status): void {
+        console.log(` [x] ERROR: The following packet was erroneously rejected:\n\t\t${problems.toString()}`);
     }
 
     // Special optional API only for SystemServices; allows detection of deviant (non-JSON) messages

@@ -5,9 +5,9 @@
  */
 
 export class Status {
-    jsonString: string
-    informationalMessages = []
-    errorMessages = []
+    private readonly jsonString: string;
+    private readonly informationalMessages: string[] = [];
+    private readonly errorMessages: string[] = [];
 
     constructor(originalJsonString: string) {
         this.jsonString = originalJsonString
@@ -39,5 +39,20 @@ export class Status {
 
     missingValue(key: string, requiredValue: any) {
         this.errorMessages.push(`Required key of <${key}> is missing required value of <${requiredValue}>`)
+    }
+
+    toString() {
+        return 'Status of filtering of:\n' +
+            `\tOriginal packet: ${this.jsonString}` +
+            this.details('Errors', this.errorMessages) +
+            this.details('Informational messages', this.informationalMessages);
+    }
+
+    private details(category: string, messages: string[]): string {
+        if (messages.length == 0) return '';
+        return `\n\t${category} - ${messages.length}\n\t\t` +
+            messages.reduce(function(result, message){
+                return result + `\t\t${message}\n`
+            });
     }
 }
